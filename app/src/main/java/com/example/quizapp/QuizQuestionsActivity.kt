@@ -1,5 +1,6 @@
 package com.example.quizapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -59,6 +60,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tvOptionThree=findViewById(R.id.tv_option_three)
         tvOptionFour=findViewById(R.id.tv_option_four)
         btnSubmit=findViewById(R.id.btn_submit)
+        mQuestionsList = Constants.getQuestions()
 
         //The log is performed
 
@@ -71,6 +73,10 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 //            Log.e("Questions",i.question)
 //        }
 
+
+
+        setQuestion()
+
         tvOptionOne?.setOnClickListener(this)//class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener
         //this is passed as a parameter to the class QuizQuestionsActivity
         tvOptionTwo?.setOnClickListener(this)
@@ -79,29 +85,31 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
         btnSubmit?.setOnClickListener(this)
 
-        setQuestion()
-
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setQuestion() {
+        val question: Question = mQuestionsList!![mCurrentPosition - 1]
         defaultOptionsView()
-        val question: Question = mQuestionsList!![mCurrentPosition - 1]//two ! is used bcoz mQuestionsList is a nullable and !! is used to unwrap
+
+        if(mCurrentPosition==mQuestionsList!!.size){
+            btnSubmit?.text="FINISH"
+        }
+        else{
+            btnSubmit?.text="SUBMIT"
+        }
+
         ivImage?.setImageResource(question.image)
         progressBar?.progress = mCurrentPosition
-        tvProgress?.text = "${mCurrentPosition}/${progressBar?.max}"
+        tvProgress?.text = "$mCurrentPosition"+"/"+ progressBar?.max
         tvQuestion?.text = question.question
         tvOptionOne?.text = question.optionOne
         tvOptionOne?.text = question.optionTwo
         tvOptionOne?.text = question.optionThree
         tvOptionOne?.text = question.optionFour
 
-        if(mCurrentPosition==mQuestionsList!!.size){
-            btnSubmit?.text="FINISH"
-        }
-        else{
-            btnSubmit?.text="NEXT"
-        }
+
 
     }
 
@@ -153,7 +161,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     
 
     override fun onClick(view: View) {
-        when(view.id){//in when clause -> operator is used to define lambda expression
+        when(view?.id){//in when clause -> operator is used to define lambda expression
             R.id.tv_option_one -> {
                 tvOptionOne?.let {
                     selectedOptionView(it, 1)
@@ -226,27 +234,27 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         when(answer){
             1 -> {
                 tvOptionOne?.background=ContextCompat.getDrawable(
-                    this,
+                    this@QuizQuestionsActivity,
                     drawableView
                 )
             }
 
             2 -> {
                 tvOptionTwo?.background=ContextCompat.getDrawable(
-                    this,
+                    this@QuizQuestionsActivity,
                     drawableView
                 )
             }
             3 -> {
                 tvOptionThree?.background=ContextCompat.getDrawable(
-                    this,
+                    this@QuizQuestionsActivity,
                     drawableView
                 )
             }
 
             4 -> {
                 tvOptionFour?.background=ContextCompat.getDrawable(
-                    this,
+                    this@QuizQuestionsActivity,
                     drawableView
                 )
             }
